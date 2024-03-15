@@ -1,0 +1,92 @@
+<%- include("./profileHeader.ejs") %>
+  <!-- Header part end-->
+<br>
+  <div class="container horizontal-profile-container">
+    <h4 class="profile-heading">MY PROFILE</h4>
+    <div class="card border border-light rounded shadow-sm">
+        <div class="row row-bordered d-flex align-items-center">
+            <div class="col-md-12 d-flex justify-content-around py-3 px-4">
+                <a class="profile-link px-3 py-2 rounded" href="/userProfile">PROFILE</a>
+                <a class="profile-link px-3 py-2 rounded" href="/orderDetails">ORDER</a>
+                <a class="profile-link px-3 py-2 rounded" href="/editUserProfile">EDIT PROFILE</a>
+                <a class="profile-link px-3 py-2 rounded" href="/changePassword">CHANGE PASSWORD</a>
+                <a class="profile-link px-3 py-2 rounded active" href="/addressManage">MANAGE ADDRESS</a>
+                <a class="profile-link px-3 py-2 rounded" href="/wallet">Wallet</a>
+            </div>
+        </div>
+    </div>
+ </div> 
+
+
+  <div class="custom-form">
+    <form action="/editAddress/<%= address._id %>" method="post">
+        <h3>Edit Address</h3>
+        <div class="mt-30">
+            <input type="text" name="name" placeholder="Name" value="<%= address.name %>" required class="single-input-primary">
+        </div>
+    
+        <div class="mt-10">
+            <input type="text" name="mobile" placeholder="10-digit Mobile Number" value="<%= address.mobile %>" required class="single-input-primary">
+        </div>
+    
+        <div class="mt-10">
+            <input type="text" name="pincode" placeholder="Pincode" value="<%= address.pincode %>" required class="single-input-primary">
+        </div>
+    
+        <div class="mt-10">
+            <input type="text" name="address" placeholder="Address" value="<%= address.address %>" required class="single-input-primary">
+        </div>
+    
+        <div class="mt-10">
+            <input type="text" name="city" placeholder="City/District/Town" value="<%= address.city %>" required class="single-input-primary">
+        </div>
+    
+        <div class="mt-10">
+            <input type="text" name="state" placeholder="State" value="<%= address.state %>" required class="single-input-primary">
+        </div>
+    
+        <div class="mt-10">
+            <input type="text" name="landmark" placeholder="Landmark (optional)" value="<%= address.landmark %>" class="single-input-primary">
+        </div>
+    
+        <div class="mt-10">
+            <input type="text" name="alternateMobile" placeholder="Alternate Phone (optional)" value="<%= address.alternateMobile %>" class="single-input-primary">
+        </div>
+    
+        <div class="mt-30"></div>
+        <button type="submit" class="genric-btn primary-border">SAVE THE ADDRESS</button>
+    </form>
+    
+</div>
+  <!-- jquery plugins here-->
+  <!-- jquery -->
+  <script src="/js/jquery-1.12.1.min.js"></script>
+  <!-- popper js -->
+  <script src="/js/popper.min.js"></script>
+  <!-- bootstrap js -->
+  <script src="/js/bootstrap.min.js"></script>
+  <!-- easing js -->
+  <script src="/js/jquery.magnific-popup.js"></script>
+  <!-- swiper js -->
+  <script src="/js/swiper.min.js"></script>
+  <!-- swiper js -->
+  <script src="/js/masonry.pkgd.js"></script>
+  <!-- particles js -->
+  <script src="/js/owl.carousel.min.js"></script>
+  <script src="/js/jquery.nice-select.min.js"></script>
+  <!-- slick js -->
+  <script src="/js/slick.min.js"></script>
+  <script src="/js/jquery.counterup.min.js"></script>
+  <script src="/js/waypoints.min.js"></script>
+  <script src="/js/contact.js"></script>
+  <script src="/js/jquery.ajaxchimp.min.js"></script>
+  <script src="/js/jquery.form.js"></script>
+  <script src="/js/jquery.validate.min.js"></script>
+  <script src="/js/mail-script.js"></script>
+  <script src="/js/stellar.js"></script>
+  <script src="/js/price_rangs.js"></script>
+  <!-- custom js -->
+  <script src="/js/custom.js"></script>
+</body>
+
+</html>

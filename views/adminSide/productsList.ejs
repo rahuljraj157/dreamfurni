@@ -1,0 +1,283 @@
+<%- include('../layouts/header.ejs') %>
+            <section class="content-main">
+                <div class="content-header">
+                    <div>
+                        <h2 class="content-title card-title">Product List</h2>
+                        
+                    </div>
+                    <div>
+                        <input type="text" placeholder="Search order ID" class="form-control bg-white" />
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <header class="card-header">
+                        <div class="row gx-3">
+                            <div class="col-lg-4 col-md-6 me-auto">
+                                <input type="text" placeholder="Search..." class="form-control" />
+                            </div>
+                            <!-- <div class="col-lg-2 col-6 col-md-3">
+                                <select class="form-select">
+                                    <option>Status</option>
+                                    <option>Active</option>
+                                    <option>Disabled</option>
+                                    <option>Show all</option>
+                                </select>
+                            </div> -->
+                            <!-- <div class="col-lg-2 col-6 col-md-3">
+                                <select class="form-select">
+                                    <option>Show 20</option>
+                                    <option>Show 30</option>
+                                    <option>Show 40</option>
+                                </select>
+                            </div> -->
+                        </div>
+                    </header>
+                    <!-- card-header end// -->
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <!-- <th>#ID</th> -->
+                                        <th scope="col">Products</th>
+                                        <th scope="col">Category</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Quantity</th>
+                                        <th scope="col">Action</th>
+                                        <th scope="col">Edit</th>
+                                        <th scope="col">offer</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% for (let i = 0; i < products.length; i++) { %>
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div>
+                                                        <% if (products[i].productImages.length > 0) { %>
+                                                            <img src="/uploads/resized/<%= products[i].productImages[0] %>" alt="Product Image" class="img-thumbnail" style="width: 50px; height: 50px;">
+                                                        <% } %>
+                                                        <span><%= products[i].name %></span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                
+                                            <td>
+                                                <% if (products[i].category && products[i].category.name) { %>
+                                                    <%= products[i].category.name %>
+                                                <% } else { %>
+                                                    N/A
+                                                <% } %>
+                                            </td>
+                                
+                                            <td><%= products[i].price %></td>
+                                            <td><%= products[i].status ? 'Active' : 'Inactive' %></td>
+                                            <!-- <td><%= products[i].createdAt %></td> -->
+                                            <td><%= products[i].quantity %></td>
+                                            <!-- <td class="text-end"></td> -->
+                                            <td>
+                                                <form method="post" action="/admin/changeProductStatus/<%= products[i]._id %>" style="display: inline-block;">
+                                                    <button type="submit" class="btn btn-sm <%= products[i].status ? 'btn-danger' : 'btn-success' %>">
+                                                        <%= products[i].status ? 'Unlist' : 'List' %>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <a href="/admin/editProduct?id=<%= products[i]._id %>" class="btn btn-primary btn-sm">Edit</a>
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-sm btn-primary" onclick="openOfferModal('<%= products[i]._id %>')">offer</button>
+                                            </td>
+            
+                                        </tr>
+                                    <% } %>
+                                </tbody>
+                                
+                            </table>
+                        </div>
+                        <!-- table-responsive //end -->
+                    </div>
+                    <!-- card-body end// -->
+                </div>
+                <!-- card end// -->
+                <!-- <div class="pagination-area mt-15 mb-50">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-start">
+                            <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                            <li class="page-item"><a class="page-link" href="#">02</a></li>
+                            <li class="page-item"><a class="page-link" href="#">03</a></li>
+                            <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                            <li class="page-item"><a class="page-link" href="#">16</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div> -->
+            </section>
+        <!-- </--offer modal--/> -->
+        <div class="modal fade" id="offerModal" tabindex="-1" aria-labelledby="offerModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="offerModalLabel">Offer Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="offerDetailsBody">
+                        <!-- Offer details will be loaded dynamically here -->
+                        <% offer.forEach((offers) => { %>
+                            <div class="offer-box" style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;" data-offerId="<%=offers._id  %>">
+                                <p style="font-weight: bold; margin: 0;">Offer Name: <%= offers.offerName %></p>
+                                <p style="margin: 0;">Starting Date: <%= offers.startingDate %></p>
+                                <p style="margin: 0;">Expiry Date: <%= offers.expiryDate %></p>
+                                <p style="margin: 0;">Percentage: <%= offers.percentage %>%</p>
+                                <!-- Apply button -->
+                                <button type="button" class="btn btn-primary apply-offer-btn">Apply</button>
+                            </div>
+                        <% })   %>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+
+            
+            <!-- content-main end// -->
+            <footer class="main-footer font-xs">
+                <div class="row pb-30 pt-15">
+                    <div class="col-sm-6">
+                        <script>
+                            document.write(new Date().getFullYear());
+                        </script>
+                        &copy; Nest - HTML Ecommerce Template .
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="text-sm-end">All rights reserved</div>
+                    </div>
+                </div>
+            </footer>
+        </main>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+
+
+        <script src="statSheet/js/vendors/jquery-3.6.0.min.js"></script>
+        <script src="statSheet/js/vendors/bootstrap.bundle.min.js"></script>
+        <script src="statSheet/js/vendors/select2.min.js"></script>
+        <script src="statSheet/js/vendors/perfect-scrollbar.js"></script>
+        <script src="statSheet/js/vendors/jquery.fullscreen.min.js"></script>
+        <!-- Main Script -->
+        <script src="statSheet/js/main.js?v=1.1" type="text/javascript"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!-- <script>
+ function openOfferModal(productId) {
+ 
+    $('#offerModal').modal('show');
+
+    $('.offer-box').click(function() {
+       
+        var offerId = $(this).data('offerid');
+
+        applyOffer(productId, offerId);
+
+        $('#offerModal').modal('hide');
+    });
+}
+
+        
+       
+        
+    
+        </script> -->
+        <script>
+        // function openOfferModal(productId) {
+        //     $('#offerModal').modal('show');
+        
+        //     $('.apply-offer-btn').click(function() {
+        //         var offerId = $(this).closest('.offer-box').data('offerId');
+        
+        //         applyOffer(productId, offerId);
+        
+        //         $('#offerModal').modal('hide');
+        //     });
+        // }
+        function openOfferModal(productId) {
+ 
+ $('#offerModal').modal('show');
+
+ $('.offer-box').click(function() {
+    
+     var offerId = $(this).data('offerid');
+
+     applyOffer(productId, offerId);
+
+     $('#offerModal').modal('hide');
+ });
+}
+        
+        function applyOffer(productId, offerId) {
+            $.ajax({
+                url: '/admin/applyOffer',
+                type: 'POST',
+                data: JSON.stringify({ offerId: offerId, productId: productId }),
+                contentType: 'application/json',
+                success: function(response) {
+                    console.log('Offer applied successfully');
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error applying offer:', error);
+                }
+            });
+        }
+      </script>
+
+
+<!-- <script>
+    $(document).ready(function() {
+      
+        $('.offer-item').on('click', function() {
+            
+            var selectedOfferId = $(this).data('offer-id');
+
+           
+            var productId = $('#offersModal').data('product-id');
+
+           
+            $.ajax({
+                method: 'POST',
+                url: '/admin/applyOffer',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    productId: productId,
+                    offerId: selectedOfferId
+                }),
+                success: function(response) {
+                    if (response.success) {
+                       
+                        console.log('Offer applied successfully');
+                    } else {
+                        console.error('Error applying offer:', response.error);
+                      
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error applying offer:', error);
+               
+                }
+            });
+        });
+    });
+</script> -->
+
+
+
+        
+
+    </body>
+</html>

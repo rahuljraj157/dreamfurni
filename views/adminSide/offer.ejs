@@ -1,0 +1,60 @@
+<%- include("../layouts/header.ejs") %>
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <a href="/admin/addoffers">
+                <button class="btn btn-primary" id="addOfferButton">Add Offer</button>
+            </a>
+        </div>
+    </div>
+    <div class="card mb-4">
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Starting Date</th>
+                        <th>Expiry Date</th>
+                        <th>Percentage</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% Offer.forEach(function(offer) { %>
+                        <tr id="offerRow_<%= offer._id %>">
+                            <td><%= offer.offerName %></td>
+                            <td><%= offer.startingDate %></td>
+                            <td><%= offer.expiryDate %></td>
+                            <td><%= offer.percentage %>%</td>
+                            <td><span class="badge rounded-pill alert-warning"><%= offer.status%></span></td>
+                            <td>
+                                <button class="btn btn-danger" onclick="removeOffer('<%= offer._id %>')">Remove</button>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+                
+            </table>
+        </div>
+    </div>
+</section>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    function removeOffer(offerId) {
+        $.ajax({
+            url: '/admin/removeOffer',
+            type: 'POST',
+            data: { offerId: offerId },
+            success: function (response) {
+                console.log(response);
+                // Remove the offer row from the table upon successful deletion
+                $('#offerRow_' + offerId).remove();
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+                alert('An error occurred while removing the offer.');
+            }
+        });
+    }
+</script>
