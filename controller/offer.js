@@ -177,6 +177,70 @@ const removeOffer = async (req, res) => {
 
 
 
+// Assume you have an Offer model imported
+
+const loadeditoffer = async (req, res) => {
+    try {
+        // Retrieve the offer ID from the request parameters
+        const { offerId } = req.query;
+
+        // Retrieve the offer details from the database based on the offer ID
+        const offer = await Offer.findById( offerId);
+
+        if (!offer) {
+            // If offer not found, render an error page or redirect to another page
+            return res.status(404).send('Offer not found');
+        }
+
+        // Render the edit page view with the offer data
+        res.render('adminSide/editOffer', { offer });
+    } catch (error) {
+        // Handle any errors that occur during the process
+        console.error('Error rendering edit page:', error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+const editoffer= async(req,res)=>{
+    try {
+        // Retrieve the offer ID from the request parameters
+        
+        const { offerId } = req.body;
+
+        // Retrieve the updated offer details from the request body
+        const { offerName, percentage, startingDate, expiryDate, status } = req.body;
+
+        // Update the offer in the database based on the offer ID
+        await Offer.findByIdAndUpdate(offerId, {
+            offerName,
+            percentage,
+            startingDate,
+            expiryDate,
+            status
+        });
+
+        // Redirect the user to the offers page after successful update
+        res.redirect('/admin/offer');
+    } catch (error) {
+        // Handle any errors that occur during the process
+        console.error('Error updating offer:', error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -203,7 +267,9 @@ module.exports = {
     loadAddOffers ,
     addOffers,
     postApplyOffer,
-    removeOffer
+    removeOffer,
+    loadeditoffer,
+    editoffer
 
    
    

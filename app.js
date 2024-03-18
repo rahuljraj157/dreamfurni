@@ -2,11 +2,23 @@
 require("dotenv").config()
 // ------------------DB connection
 const mongoose=require("mongoose")
-mongoose.connect("mongodb://localhost:27017/project_1",{ useNewUrlParser: true, useUnifiedTopology: true });
+const uri = 'mongodb+srv://rahuljraj:rahulzewss@cluster0.ovs73hh.mongodb.net/your_database_name_here?retryWrites=true&w=majority&appName=Cluster0';
+
+// Connect to MongoDB
+mongoose.connect(uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+
+// Get the default connection
 const db = mongoose.connection;
-db.on("error", console.error.bind(console, "MongoDB connection error:"));
-db.once("open", () => {
-    console.log("Connected to MongoDB");
+
+// Bind connection to error event (to get notification of connection errors)
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
+// Bind connection to open event (to know when we are connected)
+db.once('open', () => {
+  console.log('Connected to MongoDB');
 });
 
 // ------------------requiring

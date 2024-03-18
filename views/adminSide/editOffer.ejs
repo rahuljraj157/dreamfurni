@@ -1,125 +1,177 @@
-<%- include('../layouts/header.ejs') %> 
+<%- include('../layouts/header.ejs') %>
 
+add_offer.ejs
 
-<section class="content-main">
-    <div class="row">
-        <div class="col-9">
-            <div class="content-header">
-                <h2 class="content-title">Update Offer</h2>
-            </div>
-            <div id="errorMessage">
+<div class="container mt-5">
+    <h2>Add New Offer</h2>
+    <form action="/admin/editOffer" method="POST">
+        <input type="hidden" id="editOffer" name="offerId" value="<%= offer._id %>">
+        <!-- <div class="mb-3">
+            <label>Type:</label><br>
+            <input type="radio" id="product" name="type" value="product" required>
+            <label for="product">Product</label><br>
+            <input type="radio" id="category" name="type" value="category" required>
+            <label for="category">Category</label>
+        </div> -->
+<!-- 
+        <div class="mb-3">
+            <label>Name:</label><br>
+            <select id="name" name="name" required>
+                Options will be filled dynamically based on the selection -->
+            <!-- </select> -->
+        <!-- </div> -->
 
-            </div>
+        <div class="mb-3">
+            <label for="offerName">Offer Name:</label><br>
+            <input type="text" id="offerName" name="offerName" value="<%= offer.offerName %>" required>
         </div>
-        <form id="offerForm" action="" class="row" method="">
-            <div class="col-lg-6">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <div class="mb-4">
-                            <label for="product_title" class="form-label">Offer title</label>
-                            <input type="text" name="offerTitle" placeholder="Type here" value="<%= offer.offerTitle %>" class="form-control" id="product_title" required />
-                        </div>
-                        <p > Offer  Type</p>
-                        <div class="mb-4 row col-md-12" style="padding-left: 12px;">
-                            <label class="mb-2 form-check form-check-inline col-md-3" style="width: 30%;">
-                                <input class="form-check-input offerType" value="percentage"  name="offerType" type="radio" required>
-                                <span class="form-check-label"> Percentage </span>
-                            </label>
-                            
-                          
-                        </div>
-                        <div class="row gx-3">
-                            <div hidden id="percentageDiv" class="col-md-6 mb-3">
-                                <label for="percentageInput" id="discountLabel"  class="form-label">Percentage discount </label>
-                                <input id="percentageInput" min="0" max="100" value="<%= offer.percentage %>"  type="number" name="percentage" placeholder="Type here" class="form-control offerInput"  />
-                            </div>
-                            <div hidden id="fixedAmountDiv" class="col-md-6 mb-3">
-                                <label for="fixedAmountInput"  class="form-label"> Price discount </label>
-                                <input id="fixedAmountInput" min="0"  type="number" value="<%= offer.fixedAmount %>" name="fixedAmount" placeholder="Type here" class="form-control offerInput"  />
-                            </div>
-                            <input type="hidden" value="<%= offer._id%>" name="offerId">
-                        </div>
-                    </div>
-                    <button id="submitBtn" class="btn btn-md rounded font-sm hover-up text-center">Save changes</button>
-                </div>
-                
-            </div>
-        </form>
-    </div>
-</section>
 
+        <div class="mb-3">
+            <label for="discount">Discount:</label><br>
+            <input type="number" id="discount" name="percentage"  value="<%= offer.percentage %>" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="startingDate">Start date:</label><br>
+            <!-- Change input type to text -->
+            <input type="date" id="startingDate" name="startingDate"  value="<%= offer.startingDate %>">
+        </div>
+        
+
+        <div class="mb-3">
+            <label for="expiryDate">Expiry Date:</label><br>
+            <!-- Change input type to text -->
+            <input type="date" id="expiryDate" name="expiryDate" value="<%= offer.expiryDate %>">
+        </div>
+        
+
+        <div class="mb-3">
+            <label for="status">Status:</label><br>
+            <select id="status" name="status" required>
+                <option value="Active">Active</option> 
+                <option value="Inactive">Inactive</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-                            
-    document.addEventListener('DOMContentLoaded', function() {
-
-        const offerInput = document.querySelectorAll('.offerInput');
-        const offerTypes = document.querySelectorAll('.offerType');
-        const percentageDiv = document.getElementById('percentageDiv');
-        const percentageInput = document.getElementById('percentageInput');
-        const submitBtn =  document.getElementById('submitBtn');
-
-        offerInput.forEach(input =>{
-            input.addEventListener('keydown',function(event){
-                if(event.key == '-' || event.key == 'e' || event.key == '.' ){
-                    event.preventDefault();
-                    }
+    // JavaScript code to fetch products or categories based on selection
+    $(document).ready(function() {
+        $('input[type="radio"]').change(function() {
+            var type = $(this).val();
+            // Define the URL based on the selected type
+            var url = (type === 'product') ? '/admin/Product' : '/admin/Category';
+            // Make AJAX call to fetch products or categories based on type
+            $.ajax({
+                url: url,
+                method: 'GET',
+                success: function(response) {
+                    // Populate the select element with fetched items
+                    var selectElement = $('#name');
+                    selectElement.empty();
+                    response.forEach(function(item) {
+                        selectElement.append('<option value="' + item._id + '">' + item.name + '</option>');
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
             });
         });
-
-        percentageInput.addEventListener('input',function(){
-            if(this.value > 100){
-                this.value = this.value.slice(0,-1)
-            }
-        })
-
-        offerTypes.forEach(type=>{
-            type.addEventListener('change',function(){
-                if(this.value == 'percentage'){
-                    percentageDiv.hidden = false;
-                    percentageInput.required  = true;
-                    percentageInput.disabled  = false;
-                }
-               
-            })
-        })
-
-        submitBtn.addEventListener('click',function(event){
-            event.preventDefault();
-
-            const formData = Object.fromEntries(
-                new FormData(document.getElementById('offerForm'))
-            )
-            console.log(formData)
-            fetch('/admin/offers',{
-                method:'PUT',
-                headers:{
-                    "Content-Type":'application/json'
-                },
-                body: JSON.stringify({formData})
-                })
-                .then((response)=>{
-                    if(!response.ok){
-                        throw new Error('failed to fetch')
-                    }
-                    return response.json();
-                })
-                .then(data =>{
-                    console.log(data)
-                    if(data.updated){
-                        // window.location = '/admin/offers'
-                        document.getElementById('errorMessage').innerHTML = " <div class='alert-success alert'>Updated Successfully</div>"
-                    }else{
-                        document.getElementById('errorMessage').innerHTML = " <div class='alert-danger alert'>Edit failed</div>"
-                    }
-                })
-                .catch(error =>{
-                    console.error('error on editing offer',error)
-                })
-        })
-
     });
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Function to validate whether the input contains only alphabets
+        function isValidAlphabets(input) {
+            var alphabetPattern = /^[a-zA-Z\s]*$/;
+            return alphabetPattern.test(input);
+        }
+
+        // Function to validate the date format (YYYY-MM-DD)
+        function isValidDateFormat(input) {
+            var dateFormat = /^\d{4}-\d{2}-\d{2}$/;
+            return dateFormat.test(input);
+        }
+
+        // Function to validate whether the discount is more than 0%
+        function isValidDiscount(discount) {
+            return discount > 0;
+        }
+
+        // Function to validate all fields before form submission
+        function validateForm() {
+            var offerName = $('#offerName').val().trim();
+            var discount = $('#discount').val().trim();
+            var startingDate = $('#startingDate').val().trim();
+            var expiryDate = $('#expiryDate').val().trim();
+
+            // Validate offer name
+            if (!offerName || !isValidAlphabets(offerName)) {
+                alert('Please enter a valid offer name containing only alphabets.');
+                return false;
+            }
+
+            // Validate discount
+            if (!discount || !isValidDiscount(discount)) {
+                alert('Please enter a valid discount greater than 0%.');
+                return false;
+            }
+
+            // Validate starting date
+            if (!startingDate || !isValidDateFormat(startingDate)) {
+                alert('Please enter a valid starting date in the format YYYY-MM-DD.');
+                return false;
+            }
+
+            // Validate expiry date
+            if (!expiryDate || !isValidDateFormat(expiryDate)) {
+                alert('Please enter a valid expiry date in the format YYYY-MM-DD.');
+                return false;
+            }
+
+            // All validations passed
+            return true;
+        }
+
+        // Attach form submission event listener
+        $('form').submit(function(event) {
+            if (!validateForm()) {
+                event.preventDefault(); // Prevent form submission if validation fails
+            }
+        });
+    });
+</script>
 
 </script>
+
+
+
+
+<script>
+    // JavaScript code to enforce date format
+    $(document).ready(function() {
+        // Regular expression to match date format YYYY-MM-DD
+        var dateFormat = /^\d{4}-\d{2}-\d{2}$/;
+
+        // Validate the start date and expiry date fields
+        $('#startingDate, #expiryDate').on('blur', function() {
+            var inputDate = $(this).val();
+
+            // Check if the input date matches the format
+            if (!dateFormat.test(inputDate)) {
+                alert('Please enter a date in the format YYYY-MM-DD');
+                $(this).val(''); // Clear the input field
+            }
+        });
+    });
+</script>
+
+
 
 </body>
 </html>

@@ -24,16 +24,19 @@
                     <% Offer.forEach(function(offer) { %>
                         <tr id="offerRow_<%= offer._id %>">
                             <td><%= offer.offerName %></td>
-                            <td><%= offer.startingDate %></td>
-                            <td><%= offer.expiryDate %></td>
+                            <td><%= offer.startingDate.toLocaleDateString()%></td>
+                            <td><%= offer.expiryDate.toLocaleDateString() %></td>
                             <td><%= offer.percentage %>%</td>
                             <td><span class="badge rounded-pill alert-warning"><%= offer.status%></span></td>
                             <td>
+                                <button class="btn btn-primary" onclick="editOffer('<%= offer._id %>')">Edit</button>
                                 <button class="btn btn-danger" onclick="removeOffer('<%= offer._id %>')">Remove</button>
                             </td>
                         </tr>
                     <% }); %>
                 </tbody>
+                
+                
                 
             </table>
         </div>
@@ -58,3 +61,18 @@
         });
     }
 </script>
+
+<script>
+    function editOffer(offerId) {
+        var offerRow = $('#offerRow_' + offerId);
+        var offerName = offerRow.find('td:eq(0)').text();
+        var startingDate = offerRow.find('td:eq(1)').text();
+        var expiryDate = offerRow.find('td:eq(2)').text();
+        var percentage = offerRow.find('td:eq(3)').text().replace('%', ''); // Remove '%' symbol
+        var status = offerRow.find('td:eq(4)').text();
+
+        // Redirect to the edit page with offer data as query parameters
+        window.location.href = '/admin/editOffer?offerId=' + offerId + '&offerName=' + offerName + '&startingDate=' + startingDate + '&expiryDate=' + expiryDate + '&percentage=' + percentage + '&status=' + status;
+    }
+</script>
+

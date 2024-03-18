@@ -78,3 +78,9 @@ adminRoutes.post('/applyOffer',isAuth.isAdminAuth,offerController.postApplyOffer
 
 adminRoutes.post("/removeOffer",offerController.removeOffer)
 
+adminRoutes.get('/editOffer',isAuth.isAdminAuth,offerController.loadeditoffer);
+
+adminRoutes.post("/editOffer",isAuth.isAdminAuth,offerController.editoffer);
+
+
+

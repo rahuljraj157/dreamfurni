@@ -112,6 +112,7 @@
         <script src="statSheet/js/vendors/jquery.fullscreen.min.js"></script>
         <!-- Main Script -->
         <script src="statSheet/js/main.js?v=1.1" type="text/javascript"></script>
+
         <script>
             document.getElementById('createCouponForm').addEventListener('submit', async (event) => {
                 event.preventDefault();
@@ -124,60 +125,28 @@
                 const expiryDateInput = document.getElementById('Coupon_expiry').value;
         
                 // Validate all fields
-                if (!isValidInput(titleInput)) {
-                    swal("Validation Error", "Coupon title is required. Please fill it out.", "error");
+                if (!isValidInput(titleInput) || !isValidInput(codeInput) ||
+                    !isValidInput(discountInput) || !isValidInput(descriptionInput) ||
+                    !isValidInput(expiryDateInput) || !isValidInput(meetAmount)){
+                    alert('All fields are required. Please fill them out.');
                     return;
                 }
-                if (!isValidInput(codeInput)) {
-                    swal("Validation Error", "Coupon code is required. Please fill it out.", "error");
-                    return;
-                }
-                if (!isValidInput(discountInput)) {
-                    swal("Validation Error", "Discount amount is required. Please fill it out.", "error");
-                    return;
-                }
-                if (!isValidInput(meetAmount)) {
-                    swal("Validation Error", "Meet amount is required. Please fill it out.", "error");
-                    return;
-                }
-                if (!isValidInput(descriptionInput)) {
-                    swal("Validation Error", "Description is required. Please fill it out.", "error");
-                    return;
-                }
-                if (!isValidInput(expiryDateInput)) {
-                    swal("Validation Error", "Expiry date is required. Please fill it out.", "error");
-                    return;
-                }
-        
                 const isValidCode = isValidCouponCode(codeInput);
                 if (!isValidCode) {
-                    swal("Validation Error", "Coupon code must have at least three characters and contain at least one number.", "error");
+                    const codeError = document.getElementById('codeError');
+                    codeError.style.display = 'block';
                     return;
                 }
-        
-                // Check if discount amount and meet amount are greater than zero
-                if (parseFloat(discountInput) <= 0) {
-                    swal("Validation Error", "Discount amount must be greater than zero.", "error");
-                    return;
-                }
-                if (parseFloat(meetAmount) <= 0) {
-                    swal("Validation Error", "Meet amount must be greater than zero.", "error");
-                    return;
-                }
-        
                 event.target.submit();
-            });
-        
+            }); 
+    
             function isValidCouponCode(code) {
                 return code.length >= 3 && /\d/.test(code);
             }
-        
             function isValidInput(input) {
-                return input.trim() !== '';
+                return input.trim() !== ''
             }
         </script>
-        
-        
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script>
     // Add event listener to the delete link

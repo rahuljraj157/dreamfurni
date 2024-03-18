@@ -205,7 +205,7 @@
         <li>
           <a>SUBTOTAL
             <span  style="margin-left: 80px;">₹<%= itemTotalPrice %></span>
-            <input type="hidden" id="totalAmount" value="<%= overallSubtotal %>">
+            <input type="hidden" id="totalAmount" value="<%= itemTotalPrice %>">
           </a>
         </li>
         <li>
@@ -630,6 +630,8 @@ console.log('verify payment called');
     });
   });
 </script>
+
+
 
 
 </body>

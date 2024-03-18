@@ -754,7 +754,7 @@ const deleteImage = async (req, res) => {
                 });
     
                 await newCoupon.save();
-                return res.redirect("/admin/coupons");
+                return res.redirect(req.originalUrl);
             } else {
                 return res.status(401).json({ message: "Unauthorized" });
             }
@@ -767,6 +767,7 @@ const deleteImage = async (req, res) => {
     function isValidCouponCode(code) {
         return code.length >= 3 && /\d/.test(code);
     }
+
 
 
 
